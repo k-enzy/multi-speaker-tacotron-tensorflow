@@ -69,7 +69,17 @@ def text_recognition(path, config):
             break
         except Exception as err:
             raise Exception("OS error: {0}".format(err))
-
+            
+            #new source code
+            err_path = root + "_error.txt"
+            
+            if not os.path.exists(err_path):
+                error_file = open(err_path, 'w')
+                error_file.close()
+                
+            continue
+            #origin source code         
+            '''
             error_count += 1
             print("Skip warning for {} for {} times". \
                     format(path, error_count))
@@ -78,7 +88,7 @@ def text_recognition(path, config):
                 break
             else:
                 continue
-
+            '''
     remove_file(tmp_path)
     with open(txt_path, 'w') as f:
         json.dump(out, f, indent=2, ensure_ascii=False)

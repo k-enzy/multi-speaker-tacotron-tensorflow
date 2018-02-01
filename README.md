@@ -1,38 +1,40 @@
 # Multi-Speaker Tacotron in TensorFlow
 
-TensorFlow implementation of:
+원본소스를 따라해보고 이해한대로 한국말로 번역하여 작성함.
+[원본소스](https://github.com/carpedm20/multi-Speaker-tacotron-tensorflow)
+
+관련 논문:
 
 - [Deep Voice 2: Multi-Speaker Neural Text-to-Speech](https://arxiv.org/abs/1705.08947)
 - [Listening while Speaking: Speech Chain by Deep Learning](https://arxiv.org/abs/1707.04879)
 - [Tacotron: Towards End-to-End Speech Synthesis](https://arxiv.org/abs/1703.10135)
 
-Samples audios (in Korean) can be found [here](http://carpedm20.github.io/tacotron/en.html).
+원본소스 공개자의 샘플 페이지 [here](http://carpedm20.github.io/tacotron/en.html).
 
 ![model](./assets/model.png)
 
 
-## Prerequisites
+## 필수요소
 
-- Python 3.6+
+- Python 3.6+(3.6이상이라고 했는데 3.7로 하면 소스코드를 수정 해야함)
 - FFmpeg
 - [Tensorflow 1.3](https://www.tensorflow.org/install/)
 
 
-## Usage
+## 사용법
 
-### 1. Install prerequisites
+### 1. 설치
 
-After preparing [Tensorflow](https://www.tensorflow.org/install/), install prerequisites with:
+텐서플로우를 설치한다. [참고](https://www.tensorflow.org/install/)
+필수 요소 설치 명령어 :
 
     pip3 install -r requirements.txt
     python -c "import nltk; nltk.download('punkt')"
 
-If you want to synthesize a speech in Korean dicrectly, follow [2-3. Download pre-trained models](#2-3-download-pre-trained-models).
 
+### 2-1. 데이터셋 만들기
 
-### 2-1. Generate custom datasets
-
-The `datasets` directory should look like:
+데이터셋 디렉토리는 다음과 같이 만들어져야 함 : 
 
     datasets
     ├── son
@@ -50,7 +52,7 @@ The `datasets` directory should look like:
             ├── 3.mp3
             └── ...
 
-and `YOUR_DATASET/alignment.json` should look like:
+`YOUR_DATASET/alignment.json` 파일의 내용은 아래와 같이 작성되어야 함.
 
     {
         "./datasets/YOUR_DATASET/audio/001.mp3": "My name is Taehoon Kim.",
@@ -58,28 +60,30 @@ and `YOUR_DATASET/alignment.json` should look like:
         "./datasets/YOUR_DATASET/audio/003.mp3": "They have discovered a new particle.",
     }
 
-After you prepare as described, you should genearte preprocessed data with:
+데이터 변형하는 명령어 : 
 
     python3 -m datasets.generate_data ./datasets/YOUR_DATASET/alignment.json
 
 
-### 2-2. Generate Korean datasets
+### 2-2. 한국어 데이터셋
 
-Follow below commands. (explain with `son` dataset)
+아래 명령어를 따라하면 손석희의 데이터셋을 받을 수 있음.
 
-0. To automate an alignment between sounds and texts, prepare `GOOGLE_APPLICATION_CREDENTIALS` to use [Google Speech Recognition API](https://cloud.google.com/speech/). To get credentials, read [this](https://developers.google.com/identity/protocols/application-default-credentials).
+0. 음성을 자동으로 텍스트로 변환하기 위해  [Google Speech Recognition API](https://cloud.google.com/speech/) 을 사용한다. 인증 JSON을 받으면 됨 [참고](https://developers.google.com/identity/protocols/application-default-credentials).
 
        export GOOGLE_APPLICATION_CREDENTIALS="YOUR-GOOGLE.CREDENTIALS.json"
 
-1. Download speech(or video) and text.
+1. 손석희 데이터 다운로드 스크립트 실행
 
        python3 -m datasets.son.download
 
-2. Segment all audios on silence.
+2. 음성파일들이 매우 길어서 이걸 문장별로 자른다.
 
        python3 -m audio.silence --audio_pattern "./datasets/son/audio/*.wav" --method=pydub
 
-3. By using [Google Speech Recognition API](https://cloud.google.com/speech/), we predict sentences for all segmented audios.
+3. [Google Speech Recognition API](https://cloud.google.com/speech/) 을 이용하여 문장별로 자른 음성파일들에 대한 텍스트 파일을 만든다. 
+주의 : 이 스크립트 파일은 한번에 모든 음성파일을 실행하고 에러가 5번 나면 멈추게 되어있다.
+내 코드는 api에러와 상관없이 처음부터 끝까지 모두 api요청하는데 해당 요청을 한번에 모두 하면 200$요금이 나옵니다.
 
        python3 -m recognition.google --audio_pattern "./datasets/son/audio/*.*.wav"
 

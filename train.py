@@ -127,7 +127,7 @@ def train(log_dir, config):
     commit = get_git_commit() if config.git else 'None'
     checkpoint_path = os.path.join(log_dir, 'model.ckpt')
 
-    log(' [*] git recv-parse HEAD:\n%s' % get_git_revision_hash())
+    #log(' [*] git recv-parse HEAD:\n%s' % get_git_revision_hash())
     log('='*50)
     #log(' [*] dit diff:\n%s' % get_git_diff())
     log('='*50)
@@ -183,13 +183,13 @@ def train(log_dir, config):
     saver = tf.train.Saver(max_to_keep=None, keep_checkpoint_every_n_hours=2)
 
     sess_config = tf.ConfigProto(
-            log_device_placement=False,
+            log_device_placement=True,
             allow_soft_placement=True)
     sess_config.gpu_options.allow_growth=True
 
     # Train!
-    #with tf.Session(config=sess_config) as sess:
-    with tf.Session() as sess:
+    with tf.Session(config=sess_config) as sess:
+    #with tf.Session() as sess:
         try:
             summary_writer = tf.summary.FileWriter(log_dir, sess.graph)
             sess.run(tf.global_variables_initializer())
@@ -287,7 +287,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--log_dir', default='logs')
-    parser.add_argument('--data_paths', default='datasets/kr_example')
+    parser.add_argument('--data_paths', default='datasets/LJSpeech_1_0')
     parser.add_argument('--load_path', default=None)
     parser.add_argument('--initialize_path', default=None)
 
