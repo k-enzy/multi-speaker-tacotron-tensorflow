@@ -11,9 +11,6 @@
 
 원본소스 공개자의 샘플 페이지 [here](http://carpedm20.github.io/tacotron/en.html).
 
-![model](./assets/model.png)
-
-
 ## 필수요소
 
 - Python 3.6+(3.6이상이라고 했는데 3.7로 하면 소스코드를 수정 해야함)
@@ -23,9 +20,27 @@
 
 ## 사용법
 
-### 1. 설치
+### 1. 환경 설정
 
+#### 1-1. 아나콘다 설치
+편한 설치환셩을 위해 아나콘다를 사용했다. [참고](https://anaconda.org/)
+
+아나콘다 프롬프트에서 가상 환경을 만든다.
+    conda create -n tacotron python=3.5
+
+가상환경을 활성화 한다.(OS 환경에 따른 명령어)
+    (source)activate tacotron
+
+#### 1-2. 텐서 플로우 설치
 텐서플로우를 설치한다. [참고](https://www.tensorflow.org/install/)
+1.3.0버전을 whl을 다운받아 설치했다.[다운로드](https://pypi.python.org/pypi/tensorflow/1.3.0)
+    pip install tensorflow-1.3.0-$PYTHONVER-$PYTHONVER-$OS-$BIT.Whl(다운로드 받은 파일명 적으면 됨. 파이선 버전이랑 OS/OS환경에 주의하여 다운로드)
+
+#### 1-3. ffmpeg 설치
+FFmpeg를 설치한다.
+    pip install ffmpeg-normalize
+
+####
 필수 요소 설치 명령어 :
 
     pip3 install -r requirements.txt
