@@ -287,14 +287,14 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--log_dir', default='logs')
-    parser.add_argument('--data_paths', default='datasets/LJSpeech_1_0')
+    parser.add_argument('--data_paths', default='datasets/son')
     parser.add_argument('--load_path', default=None)
     parser.add_argument('--initialize_path', default=None)
 
-    parser.add_argument('--num_test_per_speaker', type=int, default=2)
+    parser.add_argument('--num_test_per_speaker', type=int, default=1)
     parser.add_argument('--random_seed', type=int, default=123)
     parser.add_argument('--summary_interval', type=int, default=100)
-    parser.add_argument('--test_interval', type=int, default=500)
+    parser.add_argument('--test_interval', type=int, default=5)#500
     parser.add_argument('--checkpoint_interval', type=int, default=1000)
     parser.add_argument('--skip_path_filter',
             type=str2bool, default=False, help='Use only for debugging')
