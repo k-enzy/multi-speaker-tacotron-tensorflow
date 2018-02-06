@@ -1,9 +1,13 @@
 import os 
 import matplotlib
+from matplotlib import font_manager, rc
 from jamo import h2j, j2hcj
 
 matplotlib.use('Agg')
-matplotlib.rc('font', family="NanumBarunGothic")
+
+font_name = font_manager.FontProperties(fname="c:/Windows/Fonts/malgun.ttf").get_name()
+rc('font', family=font_name)
+#matplotlib.rc('font', family="NanumBarunGothic")
 import matplotlib.pyplot as plt
 
 from text import PAD, EOS

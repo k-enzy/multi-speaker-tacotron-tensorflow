@@ -43,11 +43,12 @@ FFmpeg를 설치한다.
 ####
 필수 요소 설치 명령어 :
 
-    pip3 install -r requirements.txt
+    pip install -r requirements.txt
     python -c "import nltk; nltk.download('punkt')"
 
 
 ### 2-1. 데이터셋 만들기
+다른 데이터셋 만들때도 필요하므로 일단 둠
 
 데이터셋 디렉토리는 다음과 같이 만들어져야 함 : 
 
@@ -77,7 +78,7 @@ FFmpeg를 설치한다.
 
 데이터 변형하는 명령어 : 
 
-    python3 -m datasets.generate_data ./datasets/YOUR_DATASET/alignment.json
+    python -m datasets.generate_data ./datasets/YOUR_DATASET/alignment.json
 
 
 ### 2-2. 한국어 데이터셋
@@ -102,17 +103,19 @@ FFmpeg를 설치한다.
 
        python3 -m recognition.google --audio_pattern "./datasets/son/audio/*.*.wav"
 
-4. By comparing original text and recognised text, save `audio<->text` pair information into `./datasets/son/alignment.json`.
+4. 데이터를 조정하는단계 같은데 뭔지 잘 모르겠고 [이 이슈](https://github.com/carpedm20/multi-speaker-tacotron-tensorflow/issues/4)에 잘못된 데이터도 많고 해서 이 단계는 별 의미 없는 것으로 판단하고 skip함
 
        python3 -m recognition.alignment --recognition_path "./datasets/son/recognition.json" --score_threshold=0.5
 
-5. Finally, generated numpy files which will be used in training.
+5. 이걸 트레이닝에 쓰일 각각의 numpy 파일로 생성한다.
 
        python3 -m datasets.generate_data ./datasets/son/alignment.json
 
 Because the automatic generation is extremely naive, the dataset is noisy. However, if you have enough datasets (20+ hours with random initialization or 5+ hours with pretrained model initialization), you can expect an acceptable quality of audio synthesis.
 
-### 2-3. Generate English datasets
+설정을 몇번 진행하다 우분투에서 진행하던 중 [이 문제](https://github.com/carpedm20/multi-speaker-tacotron-tensorflow/issues/10) 와 같은 현상이 있었는데 ffmpeg 설치 -> generate_data 재실행 -> plot.py 에 명시적인 폰트 경로/이름 등 설정으로 해결함
+
+### 2-3. 영어 데이터 변환(이 단계는 skip )
 
 1. Download speech dataset at https://keithito.com/LJ-Speech-Dataset/
 
@@ -125,26 +128,26 @@ Because the automatic generation is extremely naive, the dataset is noisy. Howev
 		python3 -m datasets.generate_data ./datasets/LJSpeech_1_0
 		
 
-### 3. Train a model
+### 3. 모델 훈련
 
-The important hyperparameters for a models are defined in `hparams.py`.
+중요 파라미터는 `hparams.py` 파일에 정의 되어 있음
 
-(**Change `cleaners` in `hparams.py` from `korean_cleaners` to `english_cleaners` to train with English dataset**)
-
-To train a single-speaker model:
+싱글 스피커 모델 트레인:
 
     python3 train.py --data_path=datasets/son
     python3 train.py --data_path=datasets/son --initialize_path=PATH_TO_CHECKPOINT
 
-To train a multi-speaker model:
+멀티 스피커 모델 트레인:
 
     # after change `model_type` in `hparams.py` to `deepvoice` or `simple`
     python3 train.py --data_path=datasets/son1,datasets/son2
 
-To restart a training from previous experiments such as `logs/son-20171015`:
+다시 트레인 할때 이전 생성한 모델을 이용하는 방법:
 
     python3 train.py --data_path=datasets/son --load_path logs/son-20171015
 
+	
+##아직 트레인 하는 중..
 If you don't have good and enough (10+ hours) dataset, it would be better to use `--initialize_path` to use a well-trained model as initial parameters.
 
 
