@@ -147,7 +147,7 @@ Because the automatic generation is extremely naive, the dataset is noisy. Howev
     python3 train.py --data_path=datasets/son --load_path logs/son-20171015
 
 	
-##아직 트레인 하는 중..
+## 아직 트레인 하는 중..
 If you don't have good and enough (10+ hours) dataset, it would be better to use `--initialize_path` to use a well-trained model as initial parameters.
 
 
